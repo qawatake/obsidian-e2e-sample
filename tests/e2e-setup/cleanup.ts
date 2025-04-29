@@ -7,7 +7,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 const appPath = path.resolve("./.obsidian-unpacked/main.js");
-const vaultPath = path.resolve("./e2e-vault");
+const vaultPath = path.resolve("./tests/test-vault");
 
 let app: ElectronApplication;
 
@@ -30,24 +30,24 @@ test.afterEach(async () => {
   await app?.close();
 });
 
-test("テスト用vaultの登録を解除する", async () => {
+test("Unregister test vault", async () => {
   let window = await app.firstWindow();
 
-  // コマンド "Open another vault"を実行
+  // Execute the "Open another vault" command
   {
-    // コマンドパレットを開く
+    // Open the command palette
     await window.getByLabel("Open command palette", { exact: true }).click();
 
-    // コマンドパレットに入力
+    // Input to the command palette
     const commandPalette = window.locator(":focus");
     await commandPalette.fill("open another vault");
     await commandPalette.press("Enter");
   }
 
-  // 新規windowが開くまで待つ
+  // Wait for the new window to open
   window = await app.waitForEvent("window", (w) => w.url().includes("starter"));
 
-  // もともと開いていたウィンドウを閉じる
+  // Close the originally opened window
   {
     const originalWindow = app
       .windows()
@@ -55,7 +55,7 @@ test("テスト用vaultの登録を解除する", async () => {
     await originalWindow?.close();
   }
 
-  // 登録されていたvaultを削除
+  // Remove the registered vault
   {
     await window
       .getByLabel(vaultPath)

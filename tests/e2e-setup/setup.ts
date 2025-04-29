@@ -7,7 +7,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 const appPath = path.resolve("./.obsidian-unpacked/main.js");
-const vaultPath = path.resolve("./e2e-vault");
+const vaultPath = path.resolve("./tests/test-vault");
 
 let app: ElectronApplication;
 
@@ -26,13 +26,13 @@ test.afterEach(async () => {
   await app?.close();
 });
 
-test("テスト用vaultを開き、Obsidianを開けばすぐにpluginを動かせるようにセットアップする", async () => {
+test("Set up test vault to make plugin ready to use when Obsidian opens", async () => {
   let window = await app.firstWindow();
 
-  // Obsidian 側で 'did-finish-load' が発火するまで待つ
+  // Wait for 'did-finish-load' event on Obsidian side
   await window.waitForEvent("domcontentloaded");
 
-  // ファイルピッカーをstub
+  // Stub the file picker
   await app.evaluate(async ({ dialog }, fakePath) => {
     dialog.showOpenDialogSync = () => {
       return [fakePath];
@@ -42,7 +42,7 @@ test("テスト用vaultを開き、Obsidianを開けばすぐにpluginを動か�
   const openButton = window.getByRole("button", { name: "Open" });
   await openButton.click();
 
-  // windowを読み直す
+  // Reload the window
   window = await app.waitForEvent("window");
 
   // Trust the author of the vault

@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 #
-# Obsidian を展開して E2E テスト用ディレクトリを用意するスクリプト（macOS 専用）
+# Script to extract Obsidian and prepare E2E test directory (macOS only)
 # Reference: https://github.com/proog/obsidian-trash-explorer/blob/4d9bc2c4977d79af116b369904c8f68d1c164b28/e2e-setup.sh
 #
-# - ローカル           : /Applications/Obsidian.app をそのまま展開
-# - GitHub Actions    : GitHub Releases から .dmg を取得して展開
+# - Local           : Extract directly from /Applications/Obsidian.app
+# - GitHub Actions  : Get .dmg from GitHub Releases and extract
 #
 # USAGE (local) : ./scripts/setup-obsidian.sh
 # USAGE (ci)    : ./scripts/setup-obsidian.sh --ci
 #
-# 環境変数
-#   OBSIDIAN_VERSION  固定バージョンを指定（例 1.8.10）。未設定なら latest
-#   OBSIDIAN_PATH     ローカルの Obsidian.app のパスを上書き
+# Environment Variables
+#   OBSIDIAN_VERSION  Specify a fixed version (e.g., 1.8.10). If not set, uses latest
+#   OBSIDIAN_PATH     Override the path to local Obsidian.app
 #
 set -euo pipefail
 
 root_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-vault_path="$root_path/e2e-vault"
+vault_path="$root_path/tests/test-vault"
 unpacked_path="$root_path/.obsidian-unpacked"
 plugin_path="$vault_path/.obsidian/plugins/obsidian-core-search-assistant"
 
 # ------------------------------------------------------------------------------
-# 1. 引数パース
+# 1. Parse arguments
 # ------------------------------------------------------------------------------
 MODE="local"
 while [[ $# -gt 0 ]]; do
@@ -33,12 +33,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ------------------------------------------------------------------------------
-# 2. Obsidian.app の取得
+# 2. Get Obsidian.app
 # ------------------------------------------------------------------------------
 if [[ "$MODE" == "local" ]]; then
   obsidian_app="${OBSIDIAN_PATH:-/Applications/Obsidian.app}"
   [[ -d "$obsidian_app" ]] || {
-    echo "❌ $obsidian_app が見つかりません。Obsidian をインストールしてください。" >&2
+    echo "❌ $obsidian_app not found. Please install Obsidian." >&2
     exit 1
   }
 else
@@ -56,7 +56,7 @@ else
   fi
 
   dmg_path="$(find "$tmp_dir" -name '*.dmg' -type f | head -n1)"
-  [[ -n "$dmg_path" ]] || { echo "❌ .dmg が見つかりません" >&2; exit 1; }
+  [[ -n "$dmg_path" ]] || { echo "❌ .dmg not found" >&2; exit 1; }
 
   echo "📦 Mounting $(basename "$dmg_path")"
   mnt_dir="$tmp_dir/mnt"
@@ -72,7 +72,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 3. app.asar を展開してテスト用フォルダ構築
+# 3. Extract app.asar and build test folder
 # ------------------------------------------------------------------------------
 echo "🔓 Unpacking $obsidian_app → $unpacked_path"
 rm -rf "$unpacked_path"
@@ -84,7 +84,7 @@ cp "$obsidian_app/Contents/Resources/obsidian.asar" \
 echo "✅ Obsidian unpacked"
 
 # ------------------------------------------------------------------------------
-# 4. プラグインをビルドして Vault にリンク
+# 4. Build plugin and link to Vault
 # ------------------------------------------------------------------------------
 echo "🔧 Building plugin…"
 npm run build --silent
