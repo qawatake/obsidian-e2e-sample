@@ -12,21 +12,14 @@ It is based on the approach developed by [proog](https://github.com/proog) in th
 - Automates setup of Obsidian, test vault, and plugin
 - Uses Electron directly with unpacked Obsidian sources
 
-## Getting Started (Local)
+## How to Use
 
 ```sh
 npm install
-npm run e2e:setup   # Unpacks and prepares Obsidian and the vault
-npm run e2e         # Runs Playwright-based E2E tests
+./scripts/setup-obsidian.sh # Unpacks and prepares Obsidian
+npm run e2e:setup           # Creates a test vault and registers it to Obsidian
+npm run e2e                 # Runs Playwright-based E2E tests
 ```
-
-## Running on CI
-
-This repository includes a GitHub Actions workflow that performs the following:
-
-1. Downloads and unpacks Obsidian
-2. Creates a test vault and registers it to Obsidian
-3. Executes Playwright tests in headless mode
 
 See [ci.yml](.github/workflows/ci.yml) for details.
 
