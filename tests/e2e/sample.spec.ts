@@ -30,21 +30,20 @@ test.afterEach(async () => {
   await app?.close();
 });
 
-test("検索してカードをクリックするとファイルを開ける", async () => {
+test("Can open the modal by executing the command", async () => {
   const window = await app.firstWindow();
-  // サーチボタンをクリック
-  await window.getByLabel("Search", { exact: true }).click();
-  await new Promise((resolve) => setTimeout(resolve, 500000));
 
-  // 検索ボックスに入力
-  const searchInput = window.getByRole("searchbox", { name: "Search..." });
-  await searchInput.fill("hoge");
+  // Execute command "open-sample-modal-simple"
+  {
+    // Open command palette
+    await window.getByLabel("Open command palette", { exact: true }).click();
 
-  // カードをクリック
-  await window.getByRole("button", { name: "hoge" }).click();
+    // Fill the command palette
+    const commandPalette = window.locator(":focus");
+    await commandPalette.fill("sample plugin modal");
+    await commandPalette.press("Enter");
+  }
 
-  // カードにフォーカスが当たり、カードの内容が表示される
-  const focused = window.locator(":focus");
-  await expect(focused).toContainText("hogehoge");
-  // await new Promise((resolve) => setTimeout(resolve, 500000));
+  // Expect that the modal is open
+  await expect(window.getByText("Woah!", { exact: true })).toBeVisible();
 });
