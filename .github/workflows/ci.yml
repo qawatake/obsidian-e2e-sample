@@ -24,6 +24,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Fail on known vulnerabilities (ignores are listed with reasons in pnpm-workspace.yaml)
       - run: pnpm audit --audit-level=high
+      - run: pnpm lint
       - run: pnpm build
 
   e2e:
