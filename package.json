@@ -8,6 +8,8 @@
 		"node": ">=22"
 	},
 	"scripts": {
+		"lint": "biome check .",
+		"fix": "biome check --write .",
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"e2e:setup": "playwright test tests/e2e-setup/setup.ts --project e2e-setup",
@@ -18,11 +20,10 @@
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
+		"@biomejs/biome": "2.5.8",
 		"@electron/asar": "^3.4.1",
 		"@playwright/test": "^1.52.0",
 		"@types/node": "^22.15.3",
-		"@typescript-eslint/eslint-plugin": "5.29.0",
-		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"electron": "39.8.10",
 		"esbuild": "0.28.2",

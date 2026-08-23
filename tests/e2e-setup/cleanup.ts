@@ -1,11 +1,11 @@
-import test, {
-  expect,
-  type ElectronApplication,
-  type Page,
-  _electron as electron,
-} from "@playwright/test";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import test, {
+  type ElectronApplication,
+  _electron as electron,
+  expect,
+  type Page,
+} from "@playwright/test";
 
 const appPath = path.resolve("./.obsidian-unpacked/main.js");
 const vaultPath = path.resolve("./tests/test-vault");
@@ -74,7 +74,9 @@ test("Unregister test vault", async () => {
   await expect
     .poll(() => app.windows().some((w) => w.url().includes("starter")))
     .toBe(true);
-  window = app.windows().find((w) => w.url().includes("starter"))!;
+  const chooser = app.windows().find((w) => w.url().includes("starter"));
+  if (!chooser) throw new Error("vault chooser window not found");
+  window = chooser;
 
   // Close the originally opened window
   {
@@ -83,13 +85,9 @@ test("Unregister test vault", async () => {
       .find((w) => !w.url().includes("starter"));
     await originalWindow?.close();
   }
-
-  // Remove the registered vault
-  {
-    await window
-      .getByLabel(vaultPath)
-      .getByLabel("More options", { exact: true })
-      .click();
-    await window.getByText("Remove from list").click();
-  }
+  await window
+    .getByLabel(vaultPath)
+    .getByLabel("More options", { exact: true })
+    .click();
+  await window.getByText("Remove from list").click();
 });
