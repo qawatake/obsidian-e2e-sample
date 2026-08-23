@@ -94,7 +94,7 @@ echo "✅ Obsidian unpacked"
 # 4. Build plugin and link to Vault
 # ------------------------------------------------------------------------------
 echo "🔧 Building plugin…"
-npm run build --silent
+pnpm build --silent
 echo "✅ Build done."
 
 echo "🔗 Linking plugin → $plugin_path"
