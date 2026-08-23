@@ -19,7 +19,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache-dependency-path: package-lock.json
-      - run: npm install
+      - run: npm ci
       - run: npm run build
 
   e2e:
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache-dependency-path: package-lock.json
-      - run: npm install
+      - run: npm ci
       - run: ./scripts/setup-obsidian.sh --ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache-dependency-path: package-lock.json
-      - run: npm install
+      - run: npm ci
       - run: ./scripts/setup-obsidian.sh --ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
