@@ -15,10 +15,11 @@ It is based on the approach developed by [proog](https://github.com/proog) in th
 ## How to Use
 
 ```sh
-npm install
+mise install                # Node and pnpm, versions pinned in mise.toml
+pnpm install
 ./scripts/setup-obsidian.sh # Unpacks and prepares Obsidian
-npm run e2e:setup           # Creates a test vault and registers it to Obsidian
-npm run e2e                 # Runs Playwright-based E2E tests
+pnpm e2e:setup              # Creates a test vault and registers it to Obsidian
+pnpm e2e                    # Runs Playwright-based E2E tests
 ```
 
 See [ci.yml](.github/workflows/ci.yml) for details.

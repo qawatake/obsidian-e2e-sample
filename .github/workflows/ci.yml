@@ -16,39 +16,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
         with:
-          node-version-file: .node-version
-          cache-dependency-path: package-lock.json
-      - run: npm ci
-      - run: npm run build
+          version: 2024.11.3
+          install: true
+          cache: true
+      - run: pnpm install --frozen-lockfile
+      # Fail on known vulnerabilities (ignores are listed with reasons in pnpm-workspace.yaml)
+      - run: pnpm audit --audit-level=high
+      - run: pnpm build
 
   e2e:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
         with:
-          node-version-file: .node-version
-          cache-dependency-path: package-lock.json
-      - run: npm ci
+          version: 2024.11.3
+          install: true
+          cache: true
+      - run: pnpm install --frozen-lockfile
       - run: ./scripts/setup-obsidian.sh --ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm run e2e:setup
-      - run: npm run e2e
+      - run: pnpm e2e:setup
+      - run: pnpm e2e
 
   test-e2e-tools:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
         with:
-          node-version-file: .node-version
-          cache-dependency-path: package-lock.json
-      - run: npm ci
+          version: 2024.11.3
+          install: true
+          cache: true
+      - run: pnpm install --frozen-lockfile
       - run: ./scripts/setup-obsidian.sh --ci
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm run e2e:setup
-      - run: npm run e2e:cleanup
+      - run: pnpm e2e:setup
+      - run: pnpm e2e:cleanup

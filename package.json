@@ -3,12 +3,16 @@
 	"version": "1.0.0",
 	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
 	"main": "main.js",
+	"packageManager": "pnpm@10.33.2",
+	"engines": {
+		"node": ">=22"
+	},
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"e2e:setup": "npx playwright test tests/e2e-setup/setup.ts --project e2e-setup",
+		"e2e:setup": "playwright test tests/e2e-setup/setup.ts --project e2e-setup",
 		"e2e:cleanup": "playwright test tests/e2e-setup/cleanup.ts --project e2e-setup",
-		"e2e": "npm run build && playwright test --project e2e"
+		"e2e": "pnpm build && playwright test --project e2e"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,7 +24,7 @@
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
-		"electron": "^36.0.0",
+		"electron": "39.8.10",
 		"esbuild": "0.17.3",
 		"obsidian": "latest",
 		"tslib": "^2.8.1",
