@@ -1,11 +1,11 @@
-import test, {
-  expect,
-  type ElectronApplication,
-  type Page,
-  _electron as electron,
-} from "@playwright/test";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import test, {
+  type ElectronApplication,
+  _electron as electron,
+  expect,
+  type Page,
+} from "@playwright/test";
 
 const appPath = path.resolve("./.obsidian-unpacked/main.js");
 const vaultPath = path.resolve("./tests/test-vault");
@@ -33,7 +33,6 @@ test.beforeEach(async () => {
     handleDialogs(page);
   }
 });
-
 
 test.afterEach(async () => {
   // app.close() can hang if Obsidian blocks shutdown (observed with the
