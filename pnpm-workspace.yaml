@@ -7,11 +7,3 @@ onlyBuiltDependencies:
 # sanity check, so keep it blocked instead of allow-listing it.
 ignoredBuiltDependencies:
   - esbuild
-
-auditConfig:
-  ignoreGhsas:
-    # extract-zip <=2.0.1 symlink path traversal. It is pulled in only by
-    # electron's own installer (electron > extract-zip) to unpack the Electron
-    # binary we download from GitHub releases; no user-controlled archive is
-    # ever extracted. No patched version exists. Re-check when electron bumps it.
-    - GHSA-jmr9-qjv8-65gv
