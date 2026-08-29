@@ -25,7 +25,7 @@
 		"@playwright/test": "^1.52.0",
 		"@types/node": "24.13.3",
 		"builtin-modules": "5.3.0",
-		"electron": "39.8.10",
+		"electron": "43.3.0",
 		"esbuild": "0.28.2",
 		"obsidian": "latest",
 		"tslib": "^2.8.1",
