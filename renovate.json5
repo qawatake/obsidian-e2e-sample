@@ -9,9 +9,8 @@
 // Renovate additionally covers what Dependabot could not: mise.toml (node/pnpm/pinact),
 // the package.json `packageManager` field, and refreshing SHA-pinned actions.
 //
-// Unlike Dependabot there is no list of ecosystems to opt into: every manager
-// (npm, github-actions, mise, ...) is on by default and activates when its file is
-// present. Verify what is picked up with:
+// Managers are allow-listed below (`enabledManagers`); everything else Renovate
+// could detect is ignored on purpose. Verify what is picked up with:
 //   npx -p renovate renovate --platform=local --dry-run=extract
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
@@ -20,6 +19,8 @@
     // Keep actions pinned to commit SHAs with a `# vX.Y.Z` comment (pinact style).
     'helpers:pinGitHubActionDigests',
   ],
+  // Explicit allow-list: add a manager here when a new kind of file shows up.
+  enabledManagers: ['npm', 'github-actions', 'mise'],
   timezone: 'Asia/Tokyo',
   // Weekly trickle: PRs are created only in this window. What is eligible is decided
   // by the cooldown below, so nothing piles up into a monthly batch.
