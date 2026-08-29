@@ -6,8 +6,13 @@
 //   patch     -> 7 days after release: low risk, and waiting only grows the diff
 //   minor     -> 30 days: let releases mature
 //   major     -> 60 days
-// Renovate additionally covers what Dependabot could not: mise.toml (node/pnpm),
+// Renovate additionally covers what Dependabot could not: mise.toml (node/pnpm/pinact),
 // the package.json `packageManager` field, and refreshing SHA-pinned actions.
+//
+// Unlike Dependabot there is no list of ecosystems to opt into: every manager
+// (npm, github-actions, mise, ...) is on by default and activates when its file is
+// present. Verify what is picked up with:
+//   npx -p renovate renovate --platform=local --dry-run=extract
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
