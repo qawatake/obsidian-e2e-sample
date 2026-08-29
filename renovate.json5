@@ -1,0 +1,72 @@
+// Renovate replaces Dependabot version updates here (Dependabot *security* updates
+// stay enabled in the repo settings; they need no config file and ignore cooldown).
+//
+// Policy (same as the Dependabot config this replaces):
+//   security  -> immediately (Dependabot security updates)
+//   patch     -> 7 days after release: low risk, and waiting only grows the diff
+//   minor     -> 30 days: let releases mature
+//   major     -> 60 days
+// Renovate additionally covers what Dependabot could not: mise.toml (node/pnpm/pinact),
+// the package.json `packageManager` field, and refreshing SHA-pinned actions.
+//
+// Managers are allow-listed below (`enabledManagers`); everything else Renovate
+// could detect is ignored on purpose. Verify what is picked up with:
+//   npx -p renovate renovate --platform=local --dry-run=extract
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    // Keep actions pinned to commit SHAs with a `# vX.Y.Z` comment (pinact style).
+    'helpers:pinGitHubActionDigests',
+  ],
+  // Explicit allow-list: add a manager here when a new kind of file shows up.
+  enabledManagers: ['npm', 'github-actions', 'mise'],
+  timezone: 'Asia/Tokyo',
+  // Weekly trickle: PRs are created only in this window. What is eligible is decided
+  // by the cooldown below, so nothing piles up into a monthly batch.
+  schedule: ['* 0-6 * * 1'],
+  prHourlyLimit: 0,
+  labels: ['dependencies'],
+  // With a cooldown, pick the newest release that has aged enough instead of
+  // skipping the update entirely.
+  internalChecksFilter: 'strict',
+  // GitHub-alert based PRs are left to Dependabot security updates to avoid duplicates.
+  vulnerabilityAlerts: { enabled: false },
+  osvVulnerabilityAlerts: false,
+  packageRules: [
+    { matchUpdateTypes: ['patch', 'pin', 'digest'], minimumReleaseAge: '7 days' },
+    { matchUpdateTypes: ['minor'], minimumReleaseAge: '30 days' },
+    { matchUpdateTypes: ['major'], minimumReleaseAge: '60 days' },
+
+    // One PR per manager for non-major bumps (mirrors the old Dependabot groups).
+    {
+      matchManagers: ['npm'],
+      matchUpdateTypes: ['minor', 'patch'],
+      groupName: 'npm non-major',
+    },
+    {
+      matchManagers: ['github-actions'],
+      matchUpdateTypes: ['minor', 'patch', 'digest', 'pin'],
+      groupName: 'github-actions non-major',
+    },
+    // pnpm is declared twice (mise.toml and package.json#packageManager); bump both at once.
+    {
+      matchPackageNames: ['pnpm'],
+      groupName: 'pnpm',
+    },
+
+    // Majors we bump by hand, on purpose:
+    {
+      // 7.x is the Go-based rewrite (tsgo); stay on the 5.x line until tooling catches up.
+      matchPackageNames: ['typescript'],
+      matchUpdateTypes: ['major'],
+      enabled: false,
+    },
+    {
+      // Must match the Node major we run (mise.toml), not the newest available.
+      matchPackageNames: ['@types/node'],
+      matchUpdateTypes: ['major'],
+      enabled: false,
+    },
+  ],
+}
