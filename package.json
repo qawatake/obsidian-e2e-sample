@@ -9,12 +9,14 @@
 	},
 	"scripts": {
 		"lint": "biome check .",
+		"typecheck": "tsc --noEmit",
 		"fix": "biome check --write .",
 		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"build": "node esbuild.config.mjs production",
 		"e2e:setup": "playwright test tests/e2e-setup/setup.ts --project e2e-setup",
 		"e2e:cleanup": "playwright test tests/e2e-setup/cleanup.ts --project e2e-setup",
-		"e2e": "pnpm build && playwright test --project e2e"
+		"e2e:test": "playwright test --project e2e",
+		"e2e": "pnpm build && pnpm e2e:test"
 	},
 	"keywords": [],
 	"author": "",
@@ -24,11 +26,9 @@
 		"@electron/asar": "4.2.1",
 		"@playwright/test": "^1.52.0",
 		"@types/node": "24.13.3",
-		"builtin-modules": "5.3.0",
 		"electron": "43.3.0",
 		"esbuild": "0.28.2",
 		"obsidian": "latest",
-		"tslib": "^2.8.1",
 		"typescript": "5.9.3"
 	}
 }
