@@ -104,7 +104,7 @@ fi
 # ------------------------------------------------------------------------------
 echo "🔓 Unpacking $obsidian_app → $unpacked_path"
 rm -rf "$unpacked_path"
-npx --yes @electron/asar extract \
+pnpm exec asar extract \
     "$obsidian_app/Contents/Resources/app.asar" "$unpacked_path"
 cp "$obsidian_app/Contents/Resources/obsidian.asar" \
    "$unpacked_path/obsidian.asar"
