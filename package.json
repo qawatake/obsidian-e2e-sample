@@ -23,11 +23,11 @@
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "2.5.8",
-		"@electron/asar": "4.2.1",
+		"@biomejs/biome": "2.5.12",
+		"@electron/asar": "4.3.0",
 		"@playwright/test": "^1.52.0",
 		"@types/node": "24.13.3",
-		"electron": "43.3.0",
+		"electron": "43.6.0",
 		"esbuild": "0.28.2",
 		"obsidian": "latest",
 		"typescript": "5.9.3"
