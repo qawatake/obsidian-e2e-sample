@@ -4,52 +4,14 @@ import test, {
   type ElectronApplication,
   _electron as electron,
   expect,
-  type Locator,
   type Page,
 } from "@playwright/test";
+import { settleVaultWindow } from "../support/obsidian";
 
 const appPath = path.resolve("./.obsidian-unpacked/main.js");
 const vaultPath = path.resolve("./tests/test-vault");
 
 let app: ElectronApplication;
-
-/**
- * Click `target`, first dismissing any confirmation modal Obsidian may have
- * opened on startup. In CI a `.modal-container.mod-confirmation` sometimes
- * appears right after launch and swallows the first click (flaky timeout).
- * The trust prompt must be accepted, anything else is closed with Escape.
- * The modal text is logged so the cause is visible in the CI log.
- */
-async function clickPastStartupModals(window: Page, target: Locator) {
-  const attempts = 10;
-  for (let i = 0; i < attempts; i++) {
-    const modal = window.locator(".modal-container");
-    if ((await modal.count()) > 0) {
-      const text = (await modal.first().innerText())
-        .replace(/\s+/g, " ")
-        .slice(0, 200);
-      console.log(`[e2e] modal open at startup, dismissing: ${text}`);
-      const trust = modal.getByRole("button", {
-        name: "Trust author and enable plugins",
-      });
-      if ((await trust.count()) > 0) {
-        await trust.click();
-      } else {
-        await window.keyboard.press("Escape");
-      }
-      await modal
-        .first()
-        .waitFor({ state: "detached", timeout: 5_000 })
-        .catch(() => {});
-    }
-    try {
-      await target.click({ timeout: 3_000 });
-      return;
-    } catch (e) {
-      if (i === attempts - 1) throw e;
-    }
-  }
-}
 
 test.beforeEach(async () => {
   await fs.rm(path.join(vaultPath, ".obsidian", "workspace.json"), {
@@ -94,13 +56,13 @@ test.afterEach(async () => {
 test("Can open the modal by executing the command", async () => {
   const window = await app.firstWindow();
 
+  // Close startup modals (e.g. the vault trust prompt) and wait for the plugin
+  await settleVaultWindow(app, window);
+
   // Execute command "open-sample-modal-simple"
   {
     // Open command palette
-    await clickPastStartupModals(
-      window,
-      window.getByLabel("Open command palette", { exact: true }),
-    );
+    await window.getByLabel("Open command palette", { exact: true }).click();
 
     // Fill the command palette
     const commandPalette = window.locator(":focus");
