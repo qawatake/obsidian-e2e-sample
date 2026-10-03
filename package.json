@@ -26,8 +26,8 @@
 		"@biomejs/biome": "2.5.14",
 		"@electron/asar": "4.3.0",
 		"@playwright/test": "1.63.0",
-		"@types/node": "24.13.5",
-		"electron": "43.7.3",
+		"@types/node": "24.13.6",
+		"electron": "43.7.5",
 		"esbuild": "0.28.2",
 		"obsidian": "latest",
 		"typescript": "5.9.3"
