@@ -29,7 +29,7 @@
 		"@types/node": "24.19.2",
 		"electron": "43.7.9",
 		"esbuild": "0.28.2",
-		"obsidian": "latest",
+		"obsidian": "1.14.4",
 		"typescript": "5.9.3"
 	}
 }
